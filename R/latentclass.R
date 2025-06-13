@@ -141,6 +141,7 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
   
     class(result) <- "FitMaxDiff"
     result
+}
 
 # Randomly assign n individuals to classes
 randomClassMemberships <- function(n, n.classes, seed = 123)
