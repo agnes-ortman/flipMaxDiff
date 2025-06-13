@@ -115,27 +115,32 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
         characteristics$class <- factor(class_assignments)
 
         # Fit multinomial logit model
-        suppressWarnings({
-            membership_model <- nnet::multinom(class ~ ., data = characteristics, trace = FALSE)
-        })
+        membership_model <- nnet::multinom(class ~ ., data = characteristics, trace = FALSE)
 
-        # Extract coefficients
-        coefs <- coef(membership_model)  # matrix: (K-1) x (1 + num_characteristics)
+        # Extract coefficients and standard errors
+        coefs <- coef(membership_model)
+        se <- summary(membership_model)$standard.errors
+
+        # Ensure matrix format and label rows
         if (is.vector(coefs)) {
             coefs <- matrix(coefs, nrow = 1)
+            se <- matrix(se, nrow = 1)
             rownames(coefs) <- paste("Class", 2, "vs Class 1")
+            rownames(se) <- paste("Class", 2, "vs Class 1")
         } else {
             rownames(coefs) <- paste("Class", 2:n.classes, "vs Class 1")
+            rownames(se) <- paste("Class", 2:n.classes, "vs Class 1")
         }
 
         result$class.size.coefficients <- coefs
+        result$class.size.standard.errors <- se
     }
 }
+
 
   
     class(result) <- "FitMaxDiff"
     result
-}
 
 # Randomly assign n individuals to classes
 randomClassMemberships <- function(n, n.classes, seed = 123)
