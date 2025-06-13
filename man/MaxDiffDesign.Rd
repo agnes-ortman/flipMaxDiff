@@ -4,8 +4,14 @@
 \alias{MaxDiffDesign}
 \title{\code{MaxDiffDesign}}
 \usage{
-MaxDiffDesign(number.alternatives, number.questions, alternatives.per.question,
-  n.versions = 1, n.repeats = 1000, seed = 1223)
+MaxDiffDesign(
+  number.alternatives,
+  number.questions,
+  alternatives.per.question,
+  n.versions = 1,
+  n.repeats = 1000,
+  seed = 1223
+)
 }
 \arguments{
 \item{number.alternatives}{The number of alternatives in the experiment. For example, if you are doing a study investigating preferences for 10 brands, then 10 is the number of alternatives.}

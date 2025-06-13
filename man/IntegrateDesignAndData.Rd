@@ -4,8 +4,14 @@
 \alias{IntegrateDesignAndData}
 \title{\code{IntegrateDesignAndData}}
 \usage{
-IntegrateDesignAndData(design, version, best, worst, seed,
-  questions.left.out = 0)
+IntegrateDesignAndData(
+  design,
+  version,
+  best,
+  worst,
+  seed,
+  questions.left.out = 0
+)
 }
 \arguments{
 \item{design}{A \code{data.frame}, where the first variable is called 'Version', the second is called 'Question',

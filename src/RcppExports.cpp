@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // logDensitiesMaxDiff
 NumericVector logDensitiesMaxDiff(NumericMatrix e_u, NumericVector weights, bool is_tricked);
 RcppExport SEXP _flipMaxDiff_logDensitiesMaxDiff(SEXP e_uSEXP, SEXP weightsSEXP, SEXP is_trickedSEXP) {
