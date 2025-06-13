@@ -245,6 +245,30 @@ print.FitMaxDiff <- function(x, ...)
         print(round(x$class.size.coefficients, 3))
     }
 
+    # Print standard errors if available
+    if (!is.null(x$class.size.standard.errors)) {
+      cat("\nStandard Errors for Class Membership Model Coefficients:\n")
+      print(round(x$class.size.standard.errors, 3))
+    }
+
+    if (!is.null(x$standard.errors)) {
+        cat("\nStandard Errors of Parameters:\n")
+        if (x$n.classes > 1) {
+            se_matrix <- matrix(NA, nrow = nrow(x$coef), ncol = ncol(x$coef))
+            for (c in 1:x$n.classes) {
+              start <- (c - 1) * (nrow(x$coef) - 1) + 1
+              end <- c * (nrow(x$coef) - 1)
+              se_matrix[2:nrow(x$coef), c] <- x$standard.errors[start:end]
+            }
+            rownames(se_matrix) <- rownames(x$coef)
+            colnames(se_matrix) <- colnames(x$coef)
+            print(round(se_matrix, 3))
+        } else {
+          se_vec <- c(NA, x$standard.errors)
+          names(se_vec) <- names(x$coef)
+          print(round(se_vec, 3))
+        }
+    }
 
     if (x$n.classes == 1 && is.null(x$covariates.notes)
         && ((!x$is.mixture.of.normals && x$algorithm != "HB") || x$output == "Classes"))
