@@ -1,4 +1,5 @@
 #' @importFrom nnet multinom
+#' @importFrom numDeriv hessian
 latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1, seed = 123,
                                initial.parameters = NULL, n.previous.parameters = 0, trace = 0,
                                apply.weights = TRUE, tol = 0.0001, is.tricked = FALSE)
@@ -36,6 +37,13 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
         else
             previous.ll <- ll
     }
+    # Compute standard errors using a Hessian matrix
+    hessian <- numDeriv::hessian(func = function(pars) {
+    -logLikelihood(pars, X, boost, weights, ind.levels, n.classes, n.beta, n.questions, apply.weights, is.tricked)
+    }, x = p)
+
+    vcov_matrix <- tryCatch(solve(hessian), error = function(e) matrix(NA, nrow(hessian), ncol(hessian)))
+    standard.errors <- sqrt(diag(vcov_matrix))
 
     respondent.pp <- matrix(NA, n.respondents * n.questions, n.classes)
     for (l in 1:n.levels)
