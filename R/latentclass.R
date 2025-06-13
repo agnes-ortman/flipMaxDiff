@@ -69,7 +69,9 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
         input.respondent.pars <- resp.pars
 
     result <- list(posterior.probabilities = posterior.probabilities,
-                   log.likelihood = ll)
+                   log.likelihood = ll,
+                  result$standard.errors <- standard.errors
+                  result$vcov <- vcov_matrix)
     if (n.classes > 1)
     {
         coef <- matrix(0, nrow = n.beta + 1, ncol = n.classes)
