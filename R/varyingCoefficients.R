@@ -43,10 +43,10 @@ varyingCoefficientsMaxDiff <- function(dat, n.classes, seed, initial.parameters,
                 covariates.notes[i] <- paste0(names(characteristics)[i], " - ", best.n.classes, " classes")
                 covariates.chosen <- TRUE
                 characteristic.coefs[[names(characteristics)[i]]] <- best.solution$coef
-
-              if (!is.null(best.solution$class.size.coefficients)) {
-                class_size_coefs[[names(characteristics)[i]]] <- best.solution$class.size.coefficients
-                }
+              
+            if (!is.null(best.solution$class.size.coefficients)) {
+               class_size_coefs[[names(characteristics)[i]]] <- best.solution$class.size.coefficients
+                }
 
             }
             else
