@@ -7,6 +7,7 @@ varyingCoefficientsMaxDiff <- function(dat, n.classes, seed, initial.parameters,
     resp.pars <- NULL
     n.previous.parameters <- 0
     characteristics <- dat$characteristics
+    characteristic.coefs <- list()
     covariates.notes <- NULL
     covariates.chosen <- FALSE
     if (!is.null(characteristics))
@@ -40,6 +41,7 @@ varyingCoefficientsMaxDiff <- function(dat, n.classes, seed, initial.parameters,
                 n.previous.parameters <- best.solution$n.parameters
                 covariates.notes[i] <- paste0(names(characteristics)[i], " - ", best.n.classes, " classes")
                 covariates.chosen <- TRUE
+                characteristic.coefs[[names(characteristics)[i]]] <- best.solution$coef
             }
             else
             {
@@ -64,5 +66,6 @@ varyingCoefficientsMaxDiff <- function(dat, n.classes, seed, initial.parameters,
         stop("No model applied. Choose different covariates or enable latent class analysis over respondents.")
 
     result$covariates.notes <- covariates.notes
+    result$characteristic.coefficients <- characteristic.coefs
     result
 }
