@@ -83,6 +83,15 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
     result$n.parameters <- numberOfParameters(n.beta, n.classes) + n.previous.parameters
     result$bic <- -2 * ll + log(ess) * result$n.parameters
     result$respondent.parameters <- computeRespondentParameters(result, alternative.names, input.respondent.pars)
+  
+    if (n.classes > 1) {
+    intercepts <- -log(getClassWeights(p, n.classes, n.beta)[2:n.classes] /
+                       getClassWeights(p, n.classes, n.beta)[1])
+    names(intercepts) <- paste("Class", 2:n.classes, "vs Class 1")
+    result$class.size.coefficients <- matrix(intercepts, ncol = 1)
+    rownames(result$class.size.coefficients) <- names(intercepts)
+    }
+  
     class(result) <- "FitMaxDiff"
     result
 }
