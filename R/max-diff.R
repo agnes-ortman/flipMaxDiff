@@ -241,16 +241,10 @@ print.FitMaxDiff <- function(x, ...)
       }
 
     if (!is.null(x$class.size.coefficients)) {
-      cat("\nClass Membership Model Coefficients (relative to reference class):\n")
-      for (char_name in names(x$class.size.coefficients)) {
-        cat("\nCharacteristic:", char_name, "\n")
-        coefs <- x$class.size.coefficients[[char_name]]
-    if (is.null(rownames(coefs))) {
-      rownames(coefs) <- c("(Constant)", paste0("Var", seq_len(nrow(coefs) - 1)))
-      }
-      print(round(coefs, 3))
-      }
+        cat("\nClass Membership Model Coefficients (relative to reference class):\n")
+        print(round(x$class.size.coefficients, 3))
     }
+
 
     if (x$n.classes == 1 && is.null(x$covariates.notes)
         && ((!x$is.mixture.of.normals && x$algorithm != "HB") || x$output == "Classes"))

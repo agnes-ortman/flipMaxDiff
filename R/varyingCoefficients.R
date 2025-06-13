@@ -8,7 +8,6 @@ varyingCoefficientsMaxDiff <- function(dat, n.classes, seed, initial.parameters,
     n.previous.parameters <- 0
     characteristics <- dat$characteristics
     characteristic.coefs <- list()
-    class_size_coefs <- list()
     covariates.notes <- NULL
     covariates.chosen <- FALSE
     if (!is.null(characteristics))
@@ -73,6 +72,5 @@ varyingCoefficientsMaxDiff <- function(dat, n.classes, seed, initial.parameters,
 
     result$covariates.notes <- covariates.notes
     result$characteristic.coefficients <- characteristic.coefs
-    result$class.size.coefficients <- class_size_coefs
     result
 }

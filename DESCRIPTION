@@ -15,7 +15,8 @@ Imports: AlgDesign,
          flipTransformations,
          Rcpp (>= 0.12.10),
          rstan,
-         flipU
+         flipU,
+         nnet
 Suggests: testthat,
          foreign
 LinkingTo: Rcpp

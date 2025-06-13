@@ -1,3 +1,4 @@
+#' @importFrom nnet multinom
 latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1, seed = 123,
                                initial.parameters = NULL, n.previous.parameters = 0, trace = 0,
                                apply.weights = TRUE, tol = 0.0001, is.tricked = FALSE)
@@ -91,6 +92,36 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
     result$class.size.coefficients <- matrix(intercepts, ncol = 1)
     rownames(result$class.size.coefficients) <- names(intercepts)
     }
+
+    if (!is.null(dat$characteristics) && n.classes > 1) {
+    # Assign each respondent to the most likely class
+    class_assignments <- apply(pp, 1, which.max)
+
+    # Prepare data for multinomial logit
+    characteristics <- dat$characteristics
+    if (nrow(characteristics) != length(class_assignments)) {
+        warning("Mismatch between number of respondents and characteristics rows.")
+    } else {
+        characteristics$class <- factor(class_assignments)
+
+        # Fit multinomial logit model
+        suppressWarnings({
+            membership_model <- nnet::multinom(class ~ ., data = characteristics, trace = FALSE)
+        })
+
+        # Extract coefficients
+        coefs <- coef(membership_model)  # matrix: (K-1) x (1 + num_characteristics)
+        if (is.vector(coefs)) {
+            coefs <- matrix(coefs, nrow = 1)
+            rownames(coefs) <- paste("Class", 2, "vs Class 1")
+        } else {
+            rownames(coefs) <- paste("Class", 2:n.classes, "vs Class 1")
+        }
+
+        result$class.size.coefficients <- coefs
+    }
+}
+
   
     class(result) <- "FitMaxDiff"
     result
