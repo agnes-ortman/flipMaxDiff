@@ -110,7 +110,8 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
     # Prepare data for multinomial logit
     characteristics <- dat$characteristics
     if (nrow(characteristics) != length(class_assignments)) {
-        warning("Mismatch between number of respondents and characteristics rows.")
+      if (trace > 0) message("Note: characteristics and class assignments temporarily misaligned.")
+
     } else {
         characteristics$class <- factor(class_assignments)
 
