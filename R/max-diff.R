@@ -42,7 +42,7 @@ FitMaxDiff <- function(design, version = NULL, best, worst, alternative.names, n
                        algorithm = "Default", normal.covariance = "Full", pool.variance = FALSE,
                        lc.tolerance = 0.0001, n.draws = 100, is.tricked = FALSE,
                        hb.iterations = 100, hb.chains = 1, hb.max.tree.depth = 10,
-                       hb.adapt.delta = 0.8)
+                       hb.adapt.delta = 0.8, use.krinsky.robb = FALSE)
 {
     if (!is.null(weights) && !is.null(characteristics))
         stop("Weights are not able to be applied when characteristics are supplied.")
