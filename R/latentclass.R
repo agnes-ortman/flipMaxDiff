@@ -44,7 +44,13 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
     }, x = p)
 
     vcov_matrix <- tryCatch(solve(hessian), error = function(e) matrix(NA, nrow(hessian), ncol(hessian)))
-    standard.errors <- sqrt(diag(vcov_matrix))
+
+    if (use.krinsky.robb || any(is.na(diag(vcov_matrix))) || any(diag(vcov_matrix) < 0)) {
+        standard.errors <- krinskyRobb(p, vcov_matrix)
+    } else {
+        standard.errors <- sqrt(diag(vcov_matrix))
+    }
+
 
     respondent.pp <- matrix(NA, n.respondents * n.questions, n.classes)
     for (l in 1:n.levels)
