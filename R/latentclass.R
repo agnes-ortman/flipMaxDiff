@@ -1,6 +1,20 @@
 #' @importFrom nnet multinom
 #' @importFrom numDeriv hessian
 #' @importFrom MASS mvrnorm
+krinskyRobb <- function(coefs, vcov_matrix, n_draws = 1000) {
+  if (any(is.na(vcov_matrix)) || any(is.nan(vcov_matrix))) {
+    warning("VCOV matrix contains NA or NaN. Krinsky-Robb cannot be applied.")
+    return(rep(NA, length(coefs)))
+  }
+  draws <- tryCatch({
+    MASS::mvrnorm(n = n_draws, mu = coefs, Sigma = vcov_matrix)
+  }, error = function(e) {
+    warning("Krinsky-Robb simulation failed: ", e$message)
+    return(matrix(NA, nrow = n_draws, ncol = length(coefs)))
+  })
+  apply(draws, 2, sd)
+}
+
 latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1, seed = 123,
                                initial.parameters = NULL, n.previous.parameters = 0, trace = 0,
                                apply.weights = TRUE, tol = 0.0001, is.tricked = FALSE, use.krinsky.robb = FALSE)
