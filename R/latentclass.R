@@ -1,8 +1,9 @@
 #' @importFrom nnet multinom
 #' @importFrom numDeriv hessian
+#' @importFrom MASS mvrnorm
 latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1, seed = 123,
                                initial.parameters = NULL, n.previous.parameters = 0, trace = 0,
-                               apply.weights = TRUE, tol = 0.0001, is.tricked = FALSE)
+                               apply.weights = TRUE, tol = 0.0001, is.tricked = FALSE, use.krinsky.robb = FALSE)
 {
     n.respondents <- length(dat$respondent.indices)
     n.levels <- length(ind.levels)
