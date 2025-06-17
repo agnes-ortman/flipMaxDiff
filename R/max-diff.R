@@ -68,7 +68,8 @@ FitMaxDiff <- function(design, version = NULL, best, worst, alternative.names, n
     {
         if (!is.mixture.of.normals)
             result <- latentClassMaxDiff(dat, dat$respondent.indices, NULL, n.classes, seed,
-                                         initial.parameters, 0, trace, TRUE, lc.tolerance, is.tricked)
+                                         initial.parameters, 0, trace, TRUE, lc.tolerance, is.tricked,
+                                        use.krinsky.robb = use.krinsky.robb)
         else
             result <- mixtureOfNormalsMaxDiff(dat, n.classes, normal.covariance, seed, initial.parameters,
                                                trace, pool.variance, n.draws, is.tricked)
