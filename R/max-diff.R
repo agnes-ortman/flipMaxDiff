@@ -35,6 +35,7 @@
 #' @param hb.max.tree.depth http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
 #' @param hb.adapt.delta http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
 #' @export
+#' @param show.mnl.details Logical. If TRUE, prints MNL model coefficients, Krinsky-Robb standard errors, and preference shares.
 FitMaxDiff <- function(design, version = NULL, best, worst, alternative.names, n.classes = 1,
                        subset = NULL, weights = NULL, characteristics = NULL, seed = 123,
                        initial.parameters = NULL, trace = 0, sub.model.outputs = FALSE, lc = TRUE,
@@ -42,7 +43,8 @@ FitMaxDiff <- function(design, version = NULL, best, worst, alternative.names, n
                        algorithm = "Default", normal.covariance = "Full", pool.variance = FALSE,
                        lc.tolerance = 0.0001, n.draws = 100, is.tricked = FALSE,
                        hb.iterations = 100, hb.chains = 1, hb.max.tree.depth = 10,
-                       hb.adapt.delta = 0.8, use.krinsky.robb = FALSE)
+                       hb.adapt.delta = 0.8, use.krinsky.robb = FALSE,
+                      show.mnl.details = FALSE)
 {
     if (!is.null(weights) && !is.null(characteristics))
         stop("Weights are not able to be applied when characteristics are supplied.")
@@ -93,6 +95,7 @@ FitMaxDiff <- function(design, version = NULL, best, worst, alternative.names, n
     result$output <- output
     result$lc <- lc
     result$questions.left.out <- questions.left.out
+    result$show.mnl.details <- show.mnl.details
 
     resp.pars <- as.matrix(RespondentParameters(result))[dat$subset, ]
     result$respondent.probabilities <- exp(resp.pars) / rowSums(exp(resp.pars))
@@ -298,4 +301,20 @@ print.FitMaxDiff <- function(x, ...)
         col.labels <- c(paste("Class", 1:x$n.classes, "(%)<br>Size:", FormatAsPercent(x$class.sizes, 3)), "Total")
         MaxDiffTableClasses(as.matrix(x$class.preference.shares), col.labels, title, subtitle, footer)
     }
+
+    if (isTRUE(x$show.mnl.details)) {
+    if (!is.null(x$mnl.coefficients)) {
+        cat("\nMultinomial Logit Model Coefficients:\n")
+        print(round(x$mnl.coefficients, 3))
+    }
+    if (!is.null(x$mnl.standard.errors.kr)) {
+        cat("\nKrinsky-Robb Standard Errors for MNL Coefficients:\n")
+        print(round(x$mnl.standard.errors.kr, 3))
+    }
+    if (!is.null(x$mnl.preference.shares)) {
+        cat("\nPreference Shares from MNL Model:\n")
+        print(round(x$mnl.preference.shares, 3))
+        }
+    }
+
 }
