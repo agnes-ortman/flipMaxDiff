@@ -31,7 +31,8 @@ FitMaxDiff(
   hb.iterations = 100,
   hb.chains = 1,
   hb.max.tree.depth = 10,
-  hb.adapt.delta = 0.8
+  hb.adapt.delta = 0.8,
+  use.krinsky.robb = FALSE
 )
 }
 \arguments{
