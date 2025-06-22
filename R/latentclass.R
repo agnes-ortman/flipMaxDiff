@@ -126,37 +126,49 @@ latentClassMaxDiff <- function(dat, ind.levels, resp.pars = NULL, n.classes = 1,
 
     if (!is.null(dat$characteristics) && n.classes > 1) {
     # Assign each respondent to the most likely class
-    class_assignments <- apply(pp, 1, which.max)
+class_assignments <- apply(pp, 1, which.max)
 
-    # Prepare data for multinomial logit
-    characteristics <- dat$characteristics
-    if (nrow(characteristics) != length(class_assignments)) {
-      if (trace > 0) message("Note: characteristics and class assignments temporarily misaligned.")
+# Prepare data for multinomial logit
+characteristics <- dat$characteristics
+if (nrow(characteristics) != length(class_assignments)) {
+  if (trace > 0) message("Note: characteristics and class assignments temporarily misaligned.")
+} else {
+    characteristics$class <- factor(class_assignments)
+
+    # Fit multinomial logit model
+    membership_model <- nnet::multinom(class ~ ., data = characteristics, trace = FALSE)
+
+    # Extract coefficients and standard errors
+    coefs <- coef(membership_model)
+    se <- summary(membership_model)$standard.errors
+
+    # Ensure matrix format and label rows
+    if (is.vector(coefs)) {
+        coefs <- matrix(coefs, nrow = 1)
+        se <- matrix(se, nrow = 1)
+        rownames(coefs) <- paste("Class", 2, "vs Class 1")
+        rownames(se) <- paste("Class", 2, "vs Class 1")
     } else {
-        characteristics$class <- factor(class_assignments)
-
-        # Fit multinomial logit model
-        membership_model <- nnet::multinom(class ~ ., data = characteristics, trace = FALSE)
-
-        # Extract coefficients and standard errors
-        coefs <- coef(membership_model)
-        se <- summary(membership_model)$standard.errors
-
-        # Ensure matrix format and label rows
-        if (is.vector(coefs)) {
-            coefs <- matrix(coefs, nrow = 1)
-            se <- matrix(se, nrow = 1)
-            rownames(coefs) <- paste("Class", 2, "vs Class 1")
-            rownames(se) <- paste("Class", 2, "vs Class 1")
-        } else {
-            rownames(coefs) <- paste("Class", 2:n.classes, "vs Class 1")
-            rownames(se) <- paste("Class", 2:n.classes, "vs Class 1")
-        }
-
-        result$class.size.coefficients <- coefs
-        result$class.size.standard.errors <- se
+        rownames(coefs) <- paste("Class", 2:n.classes, "vs Class 1")
+        rownames(se) <- paste("Class", 2:n.classes, "vs Class 1")
     }
+
+    # Krinsky-Robb standard errors
+    vcov_matrix <- tryCatch(vcov(membership_model), error = function(e) matrix(NA, nrow(coefs), ncol(coefs)))
+    krinsky_se <- krinskyRobb(as.vector(coefs), vcov_matrix)
+
+    result$class.size.coefficients <- coefs
+    result$class.size.standard.errors <- se
+    result$mnl.coefficients <- coefs
+    result$mnl.standard.errors.kr <- matrix(krinsky_se, nrow = nrow(coefs), byrow = TRUE)
+    rownames(result$mnl.standard.errors.kr) <- rownames(coefs)
+    colnames(result$mnl.standard.errors.kr) <- colnames(coefs)
+
+    # Preference shares
+    predicted_probs <- predict(membership_model, type = "probs")
+    result$mnl.preference.shares <- colMeans(predicted_probs)
 }
+
 
 
   
