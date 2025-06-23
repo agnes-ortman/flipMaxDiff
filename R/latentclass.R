@@ -167,11 +167,10 @@ if (nrow(characteristics) != length(class_assignments)) {
     # Preference shares
     predicted_probs <- predict(membership_model, type = "probs")
     result$mnl.preference.shares <- colMeans(predicted_probs)
-}
+      }
+    }
 
-
-
-  
+ 
     class(result) <- "FitMaxDiff"
     result
 }
@@ -368,4 +367,4 @@ computeBoost <- function(resp.pars, X, n.respondents, n.questions, n.choices)
         }
     }
     result
-}
+  }
