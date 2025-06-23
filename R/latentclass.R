@@ -165,6 +165,7 @@ if (nrow(characteristics) != length(class_assignments)) {
     colnames(result$mnl.standard.errors.kr) <- colnames(coefs)
 
     # Preference shares
+    predicted_probs <- predict(membership_model, type = "probs")
     if (is.null(dim(predicted_probs))) {
     # Only two classes: predicted_probs is a vector of probabilities for class 2
     result$mnl.preference.shares <- c("Class 1" = mean(1 - predicted_probs),
