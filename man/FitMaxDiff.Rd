@@ -32,7 +32,8 @@ FitMaxDiff(
   hb.chains = 1,
   hb.max.tree.depth = 10,
   hb.adapt.delta = 0.8,
-  use.krinsky.robb = FALSE
+  use.krinsky.robb = FALSE,
+  show.mnl.details = FALSE
 )
 }
 \arguments{
@@ -96,6 +97,8 @@ Can be 'Full, 'Spherical', 'Diagonal'.}
 \item{hb.max.tree.depth}{http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded}
 
 \item{hb.adapt.delta}{http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup}
+
+\item{show.mnl.details}{Logical. If TRUE, prints MNL model coefficients, Krinsky-Robb standard errors, and preference shares.}
 }
 \description{
 Fits a latent class rank-ordered logit model with ties to a max-diff experiment.
